@@ -19,6 +19,12 @@ dotnet dev-certs https --trust
 ```
 
 ## Docker container
+create a copy of the .env.example file and rename it to .env.
+
+```
+cp .env.example .env
+```
+
 to start the docker container run the following command
 
 ```

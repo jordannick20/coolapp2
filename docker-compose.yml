@@ -18,10 +18,8 @@ services:
     # these variables could be stored in an external .env file as well
     # w0090347 will automatically be set to full access to sean_dotnetcoreSamples
     environment:
-      MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: sean_dotnetcoreSamples
-      MYSQL_USER: user
-      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: grades
     networks:
       - app-network
 

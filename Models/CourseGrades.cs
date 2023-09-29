@@ -9,7 +9,7 @@ namespace gradesApp.Models
     public class CourseGrades
     {
 
-        private const string CONNECTION_STRING = "Server=localhost;port=3306;Database=sean_dotnetcoreSamples;Uid=user;Pwd=secret;SslMode=none;";
+        private const string CONNECTION_STRING = "Server=localhost;port=3306;Database=grades;Uid=root;Pwd=secret;SslMode=none;";
 
         // database connectivity variables
         private MySqlConnection dbConnection;
