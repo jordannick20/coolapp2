@@ -1,34 +1,37 @@
 ## Running locally
-To start the kestral server use the following command
+To start the application locally run the following commands
 
-```
+```bash
+# start the mysql and adminer containers
+docker compose up -d --build
+
+# start the kestrel server
 dotnet watch
 ```
 
-to run with https enabled
+- `-d` flag is used to run the containers in the background.
+- `--build` flag is used to rebuild the containers. This is useful when the Dockerfile or docker-compose.yml file is updated
+- you can stop the containers by running the following command
 
-```
-dotnet watch --launch-profile https
-```
-
-## Trusting dev certs
-To trust the dev certs run the following command
-
-```
-dotnet dev-certs https --trust
+```bash
+docker compose down
 ```
 
-## Docker container
-create a copy of the .env.example file and rename it to .env.
+to stop the containers and delete the volumes run the following command
 
+```bash
+docker compose down -v
 ```
-cp .env.example .env
+## Debugging
+- Use the run & debug feature in Visual Studio Code to debug the application
+
+## Running in Production
+- to run in production, you need to use the `docker-compose.prod.yml` file
+
+```bash
+docker-compose -f docker-compose.prod.yml up -d --build
 ```
 
-to start the docker container run the following command
-
-```
-docker-compose up -d
-```
-
-This will start the mysql and adminer containers. The adminer container will be available at http://localhost:8080
+## About the .env file
+- The .env file contains two environment variables
+  - `MYSQL_ROOT_PASSWORD` - the root password for the MySQL database. The default value is `secret`
