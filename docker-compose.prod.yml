@@ -1,0 +1,40 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 80:80
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    build:
+      context: ./mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-secret}
+      MYSQL_DATABASE: app_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    # needed for depends_on in server
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "127.0.0.1", "-u", "root", "--password=$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db-data:
