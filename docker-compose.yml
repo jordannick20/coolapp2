@@ -1,42 +1,30 @@
-version: '3.7'
-
 services:
-  
   db:
     build:
       context: ./mysql
-      dockerfile: Dockerfile
-    image: mysql-server
-    container_name: my-mysql-server
-    command: --default-authentication-plugin=mysql_native_password
     restart: always
-    ports:
-      - 3306:3306
-    volumes:
-      - data-volume:/var/lib/mysql
-
-    # these variables could be stored in an external .env file as well
-    # w0090347 will automatically be set to full access to sean_dotnetcoreSamples
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: grades
-    networks:
-      - app-network
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-secret}
+      MYSQL_DATABASE: app_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    # needed for depends_on in server
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "127.0.0.1", "-u", "root", "--password=$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   adminer:
     image: adminer
-    container_name: my-adminer
     restart: always
     ports:
       - 8080:8080
-    networks:
-      - app-network
-
-networks:
-    app-network:
-        driver: bridge
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
-    data-volume:
-    web-root:
-      driver: local
+  db-data:
