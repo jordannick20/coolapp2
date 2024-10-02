@@ -2,6 +2,7 @@ using System;
 using MySqlConnector;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using DotNetEnv;
 
 namespace gradesApp.Models
 {
@@ -9,7 +10,8 @@ namespace gradesApp.Models
     public class CourseGrades
     {
 
-        private const string CONNECTION_STRING = "Server=localhost;port=3306;Database=app_db;Uid=root;Pwd=secret;";
+        // private const string CONNECTION_STRING = "Server=localhost;port=3306;Database=app_db;Uid=root;Pwd=secret;";
+        private string CONNECTION_STRING;
 
         // database connectivity variables
         private MySqlConnection dbConnection;
@@ -29,6 +31,11 @@ namespace gradesApp.Models
             _grades = new List<Grade>();
             _categoryList = new List<SelectListItem>();
             _gradeDetails = new Grade();
+
+            Env.Load();
+            CONNECTION_STRING = Env.GetString("CONNECTION_STRING");
+
+            Console.WriteLine(">>> conn string: " + CONNECTION_STRING);
 
             // construct required DB objects for use in private methods
             dbConnection = new MySqlConnection(CONNECTION_STRING);
