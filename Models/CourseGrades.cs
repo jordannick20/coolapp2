@@ -32,10 +32,9 @@ namespace gradesApp.Models
             _categoryList = new List<SelectListItem>();
             _gradeDetails = new Grade();
 
+            // getting connecting string from .env
             Env.Load();
             CONNECTION_STRING = Env.GetString("CONNECTION_STRING");
-
-            Console.WriteLine(">>> conn string: " + CONNECTION_STRING);
 
             // construct required DB objects for use in private methods
             dbConnection = new MySqlConnection(CONNECTION_STRING);
