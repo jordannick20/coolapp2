@@ -3,27 +3,27 @@
 <div class="row">
     <div class="col my-3">
 
-        <div style="margin-bottom:10px">
+        <div class="mb-2">
             <h4>Course Name</h4>
             @Model.gradeDetails.courseName
         </div>
 
-        <div style="margin-bottom:10px">
+        <div class="mb-2">
             <h4>Course Description</h4>
             @Model.gradeDetails.courseDescription
         </div>
 
-        <div style="margin-bottom:10px">
+        <div class="mb-2">
             <h4>Grade</h4>
             @Model.gradeDetails.grade
         </div>
 
-        <div style="margin-bottom:10px">
+        <div class="mb-2">
             <h4>Comments</h4>
             @Model.gradeDetails.comments
         </div>
 
-        <div style="margin-top:20px">
+        <div class="mt-2">
             <form asp-controller="Grades" asp-action="SelectCategory">
                 <input type="hidden" asp-for="@Model.categoryID" value="@Model.gradeDetails.categoryID" />
                 <button type="submit" name="btnDescription" class="btn btn-success">Go Back</button>
