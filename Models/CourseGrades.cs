@@ -98,6 +98,12 @@ namespace gradesApp.Models
 
                             item.Value = Convert.ToString(dbReader["categoryID"]);
 
+                            if (categoryID == 0)
+                            {
+                                // first time - set to first item in list
+                                categoryID = Convert.ToInt32(dbReader["categoryID"]);
+                            }
+
                             _categoryList.Add(item);
                         }
                     }
