@@ -8,23 +8,23 @@
             <h3>Add New Grade:</h3>
             <div class="mb-3">
                 <label for="txtCourse">Category:</label>
-                <input type="text" class="form-control" asp-for="@Model.categoryID" value="@Model.categoryID" readonly />
+                <input type="text" class="form-control" asp-for="categoryID" readonly />
             </div>
             <div class="mb-3">
                 <label for="txtCourse">Course:</label>
-                <input id="txtCourse" asp-for="@Model.gradeDetails.courseName" type="text" class="form-control" />
+                <input id="txtCourse" asp-for="gradeDetails.courseName" type="text" class="form-control" />
             </div>
             <div class="mb-3">
                 <label for="txtDescription">Description:</label>
-                <textarea id="txtDescription" asp-for="@Model.gradeDetails.courseDescription" class="form-control" rows="5" columns="50"></textarea>
+                <textarea id="txtDescription" asp-for="gradeDetails.courseDescription" class="form-control" rows="5" columns="50"></textarea>
             </div>
             <div class="mb-3">
                 <label for="txtGrade">Grade (%):</label>
-                <input id="txtGrade" asp-for="@Model.gradeDetails.grade" type="number" class="form-control" columns="3" />
+                <input id="txtGrade" asp-for="gradeDetails.grade" type="number" class="form-control" columns="3" />
             </div>
             <div class="mb-3">
                 <label for="txtComments">Comment:</label>
-                <textarea id="txtComments" asp-for="@Model.gradeDetails.comments" class="form-control" rows="5" columns="50"></textarea>
+                <textarea id="txtComments" asp-for="gradeDetails.comments" class="form-control" rows="5" columns="50"></textarea>
             </div>
             <div class="mb-3">
                 <button type="submit" class="btn btn-primary">Add Grade</button>
