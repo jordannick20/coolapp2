@@ -26,13 +26,7 @@ namespace gradesApp.Controllers
         {
             courseGrades.getDetails(gradeID);
             return View(courseGrades);
-        }
-
-        [HttpPost]
-        public IActionResult Add(CourseGrades courseGrades)
-        {
-            return View(courseGrades);
-        }
+        }        
 
     }
 }
