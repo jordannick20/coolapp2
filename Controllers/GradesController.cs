@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using gradesApp.Models;
+using GradesApp.Models;
 using System;
 
-namespace gradesApp.Controllers
+namespace GradesApp.Controllers
 {
     public class GradesController : Controller
     {
@@ -26,7 +26,7 @@ namespace gradesApp.Controllers
         {
             courseGrades.getDetails(gradeID);
             return View(courseGrades);
-        }        
+        }
 
     }
 }

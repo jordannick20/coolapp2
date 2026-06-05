@@ -2,7 +2,7 @@ using MySqlConnector;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using DotNetEnv;
 
-namespace gradesApp.Models
+namespace GradesApp.Models
 {
 
     public class CourseGrades
