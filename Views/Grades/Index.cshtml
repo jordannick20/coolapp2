@@ -1,20 +1,16 @@
-@model CourseGrades
+@model GradesViewModel
 
 <div class="row my-3">
     <div class="col">
-        <form asp-controller="Grades" asp-action="SelectCategory">
-            <select id="lstCategory" class="form-select"
-                style="max-width: 250px; !important;"
-                asp-for="categoryID"
-                asp-items="@Model.categoryList"
-                onchange="this.form.submit();"></select>
+        <form asp-controller="Grades" asp-action="Category" method="get">
+            <select asp-items="@Model.CategoryList" asp-for="CategoryID" id="lstCategory" class="form-select"
+                    style="max-width: 250px;" onchange="this.form.submit();"></select>
         </form>
     </div>
 </div>
 
 <div class="row">
     <div class="col">
-
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -24,23 +20,29 @@
                 </tr>
             </thead>
             <tbody>
-                @if (Model.count == 0) {
-                    <tr><td colspan="3">No courses in database...</td></tr>
-                } else {
-                    foreach (var item in Model.grades) {
-                        <tr>
-                            <td><a asp-controller="Grades" asp-action="Details" asp-route-gradeID="@item.gradeID" class=”text-success”>@item.courseName</a></td>
-                            <td>@item.grade%</td>
-                            <td>@item.comments</td>
-                        </tr>
-                    }
+                @if (Model.Grades.Count == 0)
+                {
+                    <tr>
+                        <td colspan="3">No courses in database...</td>
+                    </tr>
+                }
+                @foreach (Grade item in Model.Grades)
+                {
+                    <tr>
+                        <td><a asp-controller="Grades" asp-action="Details" asp-route-gradeID="@item.GradeID"
+                                   class="text-success">@item.CourseName</a>
+                        </td>
+                        <td>@item.CourseGrade%</td>
+                        <td>@item.Comments</td>
+                    </tr>
                 }
             </tbody>
         </table>
-
     </div>
 </div>
 
 <div class="row">
-    <div class="col"><h4>Total Courses: @Model.count</h4></div>
+    <div class="col">
+        <h4>Total Courses: @Model.Grades.Count</h4>
+    </div>
 </div>

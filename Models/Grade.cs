@@ -1,12 +1,11 @@
-namespace GradesApp.Models
+namespace GradesApp.Models;
+
+public class Grade
 {
-    public class Grade
-    {
-        public int gradeID { get; set; }
-        public int categoryID { get; set; }
-        public string courseName { get; set; }
-        public string grade { get; set; }
-        public string comments { get; set; }
-        public string courseDescription { get; set; }
-    }
+    public int GradeID { get; set; }
+    public int CategoryID { get; set; }
+    public string? CourseName { get; set; }
+    public string? CourseGrade { get; set; }
+    public string? Comments { get; set; }
+    public string? CourseDescription { get; set; }
 }

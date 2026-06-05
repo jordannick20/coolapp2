@@ -1,32 +1,40 @@
 using Microsoft.AspNetCore.Mvc;
 using GradesApp.Models;
-using System;
+using GradesApp.ViewModels;
 
-namespace GradesApp.Controllers
+namespace GradesApp.Controllers;
+
+public class GradesController : Controller
 {
-    public class GradesController : Controller
+    public async Task<IActionResult> Index()
     {
-        public IActionResult Index()
-        {
-            // first visit to app - construct model and pass to view
-            CourseGrades courseGrades = new CourseGrades();
-            courseGrades.setupMe();
-            return View(courseGrades);
-        }
+        // first visit to app - construct model and pass to view
+        CourseGrades courseGrades = new CourseGrades();
+        GradesViewModel gradesViewModel = new GradesViewModel();
 
-        [HttpPost]
-        public IActionResult SelectCategory(CourseGrades courseGrades)
-        {
-            courseGrades.setupMe();
-            return View("Index", courseGrades);
-        }
+        gradesViewModel.Grades = await courseGrades.GetGradesAsync();
+        gradesViewModel.CategoryList = await courseGrades.GetCategoryListAsync();
 
-        [Route("Grades/Details/{gradeID}")]
-        public IActionResult Details(CourseGrades courseGrades, string gradeID)
-        {
-            courseGrades.getDetails(gradeID);
-            return View(courseGrades);
-        }
+        return View(gradesViewModel);
+    }
 
+    public async Task<IActionResult> Category(int categoryID)
+    {
+        CourseGrades courseGrades = new CourseGrades();
+        GradesViewModel gradesViewModel = new GradesViewModel();
+
+        gradesViewModel.Grades = await courseGrades.GetGradesAsync(categoryID);
+        gradesViewModel.CategoryList = await courseGrades.GetCategoryListAsync();
+        gradesViewModel.CategoryID = categoryID;
+
+        return View("Index", gradesViewModel);
+    }
+
+    [Route("Grades/Details/{gradeID}")]
+    public async Task<IActionResult> Details(int gradeID)
+    {
+        CourseGrades courseGrades = new CourseGrades();
+        Grade grade = await courseGrades.GetGradeByIDAsync(gradeID);
+        return View(grade);
     }
 }

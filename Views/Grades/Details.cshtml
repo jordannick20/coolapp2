@@ -1,34 +1,32 @@
-@model CourseGrades
+@model Grade
 
 <div class="row">
     <div class="col my-3">
 
-        <div class="mb-2">
+        <!-- Challenge Solution -->
+        <div style="margin-bottom:10px">
             <h4>Course Name</h4>
-            @Model.gradeDetails.courseName
+            @Model.CourseName
         </div>
 
-        <div class="mb-2">
+        <div style="margin-bottom:10px">
             <h4>Course Description</h4>
-            @Model.gradeDetails.courseDescription
+            @Model.CourseDescription
         </div>
 
-        <div class="mb-2">
+        <div style="margin-bottom:10px">
             <h4>Grade</h4>
-            @Model.gradeDetails.grade
+            @Model.CourseGrade
         </div>
 
-        <div class="mb-2">
+        <div style="margin-bottom:10px">
             <h4>Comments</h4>
-            @Model.gradeDetails.comments
+            @Model.Comments
         </div>
 
-        <div class="mt-2">
-            <form asp-controller="Grades" asp-action="SelectCategory">
-                <input type="hidden" asp-for="@Model.categoryID" value="@Model.gradeDetails.categoryID" />
-                <button type="submit" name="btnDescription" class="btn btn-success">Go Back</button>
-            </form>
+        <div class="mt-4">
+            <a class="btn btn-primary" asp-controller="Grades" asp-action="Category"
+               asp-route-categoryID="@Model.CategoryID">Go Back</a>
         </div>
-        
     </div>
 </div>

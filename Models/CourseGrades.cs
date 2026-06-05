@@ -1,177 +1,125 @@
-using MySqlConnector;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using DotNetEnv;
+using MySqlConnector;
 
-namespace GradesApp.Models
+namespace GradesApp.Models;
+
+public class CourseGrades
 {
+    private readonly string CONNECTION_STRING;
 
-    public class CourseGrades
+    public CourseGrades()
     {
-
-        // private const string CONNECTION_STRING = "Server=localhost;port=3306;Database=app_db;Uid=root;Pwd=secret;";
-        private string CONNECTION_STRING;
-
-        // database connectivity variables
-        private MySqlConnection? dbConnection;
-        private MySqlCommand? dbCommand;
-        private MySqlDataReader? dbReader;
-
-        // property variables
-        private int _count;
-        private List<Grade> _grades;
-        private List<SelectListItem> _categoryList;
-        private Grade _gradeDetails;
-
-        public CourseGrades()
-        {
-            // initialization
-            _count = 0;
-            _grades = new List<Grade>();
-            _categoryList = new List<SelectListItem>();
-            _gradeDetails = new Grade();
-
-            // getting connecting string from .env
-            Env.Load();
-            CONNECTION_STRING = Env.GetString("CONNECTION_STRING");
-        }
-
-        // ------------------------------------------------- gets/sets
-        public int count
-        {
-            get
-            {
-                return _count;
-            }
-        }
-
-        public List<Grade> grades
-        {
-            get
-            {
-                return _grades;
-            }
-        }
-
-        public List<SelectListItem> categoryList
-        {
-            get
-            {
-                return _categoryList;
-            }
-        }
-
-        public int categoryID { get; set; } = 0;
-
-        public Grade gradeDetails
-        {
-            get
-            {
-                return _gradeDetails;
-            }
-        }
-
-        // ------------------------------------------------- public methods
-        public void setupMe()
-        {
-            getCategoryList();
-            getGradeData();
-        }
-
-        // ------------------------------------------------- private methods
-        private void getCategoryList()
-        {
-            using (dbConnection = new MySqlConnection(CONNECTION_STRING))
-            {
-                dbConnection.Open();
-                using (dbCommand = dbConnection.CreateCommand())
-                {
-                    dbCommand.CommandText = "SELECT * FROM tblCategory";
-
-                    using (dbReader = dbCommand.ExecuteReader())
-                    {
-                        // populate List
-                        while (dbReader.Read())
-                        {
-                            SelectListItem item = new SelectListItem();
-
-                            item.Text = dbReader.GetString("categoryName");
-
-                            item.Value = Convert.ToString(dbReader["categoryID"]);
-
-                            if (categoryID == 0)
-                            {
-                                // first time - set to first item in list
-                                categoryID = Convert.ToInt32(dbReader["categoryID"]);
-                            }
-
-                            _categoryList.Add(item);
-                        }
-                    }
-                }
-            }
-        }
-
-        private void getGradeData()
-        {
-            using (dbConnection = new MySqlConnection(CONNECTION_STRING))
-            {
-                dbConnection.Open();
-
-                using (dbCommand = dbConnection.CreateCommand())
-                {
-                    dbCommand.CommandText = "SELECT * FROM tblGrades WHERE categoryID = " + categoryID;
-                    using (dbReader = dbCommand.ExecuteReader())
-                    {
-                        while (dbReader.Read())
-                        {
-                            Grade grade = new Grade();
-                            grade.gradeID = dbReader.GetInt32("gradeID");
-                            grade.categoryID = dbReader.GetInt32("categoryID");
-                            grade.courseName = dbReader.GetString("courseName");
-                            grade.grade = dbReader.GetString("grade");
-                            grade.comments = dbReader.GetString("comments");
-                            // add object to list
-                            _grades.Add(grade);
-                        }
-
-                        _count = _grades.Count;
-                    }
-                }
-            }
-        }
-
-        // -------------------------------------------- public methods
-        public Grade getDetails(string grdID)
-        {
-            // need this to find the grade details data
-            int gradeID = Convert.ToInt32(grdID);
-
-            using (dbConnection = new MySqlConnection(CONNECTION_STRING))
-            {
-                dbConnection.Open();
-
-                using (dbCommand = dbConnection.CreateCommand())
-                {
-                    dbCommand.CommandText = "SELECT * FROM tblGrades WHERE gradeID = " + gradeID;
-
-                    using (dbReader = dbCommand.ExecuteReader())
-                    {
-                        dbReader.Read();
-
-                        // populate Grade object properties
-                        _gradeDetails.gradeID = dbReader.GetInt32("gradeID");
-                        _gradeDetails.categoryID = dbReader.GetInt32("categoryID");
-                        _gradeDetails.courseName = dbReader.GetString("courseName");
-                        _gradeDetails.courseDescription = dbReader.GetString("courseDescription");
-                        _gradeDetails.grade = dbReader.GetString("grade");
-                        _gradeDetails.comments = dbReader.GetString("comments");
-                    }
-                }
-            }
-
-            return _gradeDetails;
-        }
-
+        // getting connecting string from .env
+        Env.Load();
+        CONNECTION_STRING = Env.GetString("CONNECTION_STRING");
     }
 
+    // ***** CHALLENGE SOLUTION *****
+    private async Task<int> GetFirstCategoryIDAsync()
+    {
+        using var dbConnection = new MySqlConnection(CONNECTION_STRING);
+
+        await dbConnection.OpenAsync();
+
+        using var dbCommand = dbConnection.CreateCommand();
+
+        dbCommand.CommandText = "SELECT categoryID FROM tblCategory ORDER BY categoryID LIMIT 1";
+
+        var categoryID = await dbCommand.ExecuteScalarAsync();
+
+        return Convert.ToInt32(categoryID);
+    }
+
+    public async Task<List<Grade>> GetGradesAsync(int? categoryID = null)
+    {
+        var grades = new List<Grade>();
+
+        // create our MySqlConnection object
+        using var dbConnection = new MySqlConnection(CONNECTION_STRING);
+
+        await dbConnection.OpenAsync();
+
+        using var dbCommand = dbConnection.CreateCommand();
+
+        // ***** CHALLENGE SOLUTION *****
+        if (!categoryID.HasValue)
+        {
+            categoryID = await GetFirstCategoryIDAsync();
+        }
+
+        dbCommand.CommandText = "SELECT * FROM tblGrades WHERE categoryID = " + categoryID;
+        // **** END CHALLENGE SOLUTION *****
+
+        using var dbReader = await dbCommand.ExecuteReaderAsync();
+
+        while (await dbReader.ReadAsync())
+        {
+            Grade grade = new Grade();
+
+            grade.GradeID = Convert.ToInt32(dbReader["gradeID"]);
+            grade.CategoryID = Convert.ToInt32(dbReader["categoryID"]);
+            grade.CourseName = Convert.ToString(dbReader["courseName"]);
+            grade.CourseGrade = Convert.ToString(dbReader["grade"]);
+            grade.Comments = Convert.ToString(dbReader["comments"]);
+
+            // add object to list
+            grades.Add(grade);
+        }
+
+        return grades;
+    }
+
+    public async Task<List<SelectListItem>> GetCategoryListAsync()
+    {
+        var categoryList = new List<SelectListItem>();
+
+        using var dbConnection = new MySqlConnection(CONNECTION_STRING);
+
+        await dbConnection.OpenAsync();
+
+        using var dbCommand = dbConnection.CreateCommand();
+
+        dbCommand.CommandText = "SELECT * FROM tblCategory";
+
+        using var dbReader = await dbCommand.ExecuteReaderAsync();
+
+        // populate List
+        while (await dbReader.ReadAsync())
+        {
+            SelectListItem item = new SelectListItem();
+
+            item.Text = Convert.ToString(dbReader["categoryName"]);
+
+            item.Value = Convert.ToString(dbReader["categoryID"]);
+
+            categoryList.Add(item);
+        }
+
+        return categoryList;
+    }
+
+    public async Task<Grade> GetGradeByIDAsync(int gradeID)
+    {
+        using var dbConnection = new MySqlConnection(CONNECTION_STRING);
+
+        await dbConnection.OpenAsync();
+
+        using var dbCommand = dbConnection.CreateCommand();
+
+        dbCommand.CommandText = "SELECT * FROM tblGrades WHERE gradeID = " + gradeID;
+
+        using var dbReader = await dbCommand.ExecuteReaderAsync();
+
+        await dbReader.ReadAsync();
+
+        Grade grade = new Grade();
+
+        grade.GradeID = Convert.ToInt32(dbReader["gradeID"]);
+        grade.CategoryID = Convert.ToInt32(dbReader["categoryID"]);
+        grade.CourseName = Convert.ToString(dbReader["courseName"]);
+        grade.CourseGrade = Convert.ToString(dbReader["grade"]);
+        grade.Comments = Convert.ToString(dbReader["comments"]);
+
+        return grade;
+    }
 }
