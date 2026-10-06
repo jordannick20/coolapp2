@@ -26,14 +26,14 @@
                         <td colspan="3">No courses in database...</td>
                     </tr>
                 }
-                @foreach (Grade item in Model.Grades)
+                @foreach (Grade grade in Model.Grades)
                 {
                     <tr>
-                        <td><a asp-controller="Grades" asp-action="Details" asp-route-gradeID="@item.GradeID"
-                                   class="text-success">@item.CourseName</a>
+                        <td><a asp-controller="Grades" asp-action="Details" asp-route-gradeID="@grade.GradeID"
+                                   class="text-success">@grade.CourseName</a>
                         </td>
-                        <td>@item.CourseGrade%</td>
-                        <td>@item.Comments</td>
+                        <td>@grade.CourseGrade%</td>
+                        <td>@grade.Comments</td>
                     </tr>
                 }
             </tbody>
