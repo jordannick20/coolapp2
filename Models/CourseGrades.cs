@@ -35,6 +35,12 @@ public class CourseGrades
     {
         var grades = new List<Grade>();
 
+        // ***** CHALLENGE SOLUTION *****
+        if (!categoryID.HasValue)
+        {
+            categoryID = await GetFirstCategoryIDAsync();
+        }
+
         // create our MySqlConnection object
         using var dbConnection = new MySqlConnection(CONNECTION_STRING);
 
@@ -42,14 +48,7 @@ public class CourseGrades
 
         using var dbCommand = dbConnection.CreateCommand();
 
-        // ***** CHALLENGE SOLUTION *****
-        if (!categoryID.HasValue)
-        {
-            categoryID = await GetFirstCategoryIDAsync();
-        }
-
         dbCommand.CommandText = "SELECT * FROM tblGrades WHERE categoryID = " + categoryID;
-        // **** END CHALLENGE SOLUTION *****
 
         using var dbReader = await dbCommand.ExecuteReaderAsync();
 
