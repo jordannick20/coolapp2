@@ -119,7 +119,31 @@ public class CourseGrades
         grade.CourseName = Convert.ToString(dbReader["courseName"]);
         grade.CourseGrade = Convert.ToString(dbReader["grade"]);
         grade.Comments = Convert.ToString(dbReader["comments"]);
+        grade.CourseDescription = Convert.ToString(dbReader["courseDescription"]);
 
         return grade;
+    }
+
+    public async Task AddGradeAsync(Grade grade)
+    {
+        using var dbConnection = new MySqlConnection(CONNECTION_STRING);
+
+        await dbConnection.OpenAsync();
+
+        using var dbCommand = dbConnection.CreateCommand();
+
+        // BAD APPROACH
+        // dbCommand.CommandText = "INSERT INTO tblGrades (categoryID,courseName,courseDescription,grade,comments) VALUES (" + grade.CategoryID + ",'" + grade.CourseName + "','" + grade.CourseDescription + "'," + grade.CourseGrade + ",'" + grade.Comments + "')";
+
+        // GOOD APPROACH - parameterized queries
+        dbCommand.CommandText = "INSERT INTO tblGrades (categoryID,courseName,courseDescription,grade,comments) VALUES (@categoryID,@courseName,@courseDescription,@grade,@comments)";
+
+        dbCommand.Parameters.AddWithValue("@categoryID", grade.CategoryID);
+        dbCommand.Parameters.AddWithValue("@courseName", grade.CourseName);
+        dbCommand.Parameters.AddWithValue("@courseDescription", grade.CourseDescription);
+        dbCommand.Parameters.AddWithValue("@grade", grade.CourseGrade);
+        dbCommand.Parameters.AddWithValue("@comments", grade.Comments);
+
+        await dbCommand.ExecuteNonQueryAsync();
     }
 }

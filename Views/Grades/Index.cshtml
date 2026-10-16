@@ -6,6 +6,9 @@
             <select asp-items="@Model.CategoryList" asp-for="CategoryID" id="lstCategory" class="form-select"
                     style="max-width: 250px;" onchange="this.form.submit();"></select>
         </form>
+
+        <a class="btn btn-primary my-2" asp-controller="Grades" asp-action="Add"
+           asp-route-categoryID="@Model.CategoryID">Add New</a>
     </div>
 </div>
 
