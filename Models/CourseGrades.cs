@@ -26,6 +26,7 @@ public class CourseGrades
 
         dbCommand.CommandText = "SELECT categoryID FROM tblCategory ORDER BY categoryID LIMIT 1";
 
+
         var categoryID = await dbCommand.ExecuteScalarAsync();
 
         return Convert.ToInt32(categoryID);
@@ -48,7 +49,9 @@ public class CourseGrades
 
         using var dbCommand = dbConnection.CreateCommand();
 
-        dbCommand.CommandText = "SELECT * FROM tblGrades WHERE categoryID = " + categoryID;
+        dbCommand.CommandText = "SELECT * FROM tblGrades WHERE categoryID = @categoryID";
+
+        dbCommand.Parameters.AddWithValue("@categoryID", categoryID);
 
         using var dbReader = await dbCommand.ExecuteReaderAsync();
 
@@ -106,7 +109,9 @@ public class CourseGrades
 
         using var dbCommand = dbConnection.CreateCommand();
 
-        dbCommand.CommandText = "SELECT * FROM tblGrades WHERE gradeID = " + gradeID;
+        dbCommand.CommandText = "SELECT * FROM tblGrades WHERE gradeID = @gradeID";
+
+        dbCommand.Parameters.AddWithValue("@gradeID", gradeID);
 
         using var dbReader = await dbCommand.ExecuteReaderAsync();
 

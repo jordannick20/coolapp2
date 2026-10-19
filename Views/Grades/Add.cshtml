@@ -7,7 +7,7 @@
 
             <div class="mb-3">
                 <label for="CategoryID">Category:</label>
-                <input type="text" asp-for="CategoryID" class="form-control" readonly />
+                <input type="text" asp-for="CourseName" class="form-control" readonly />
             </div>
             <div class="mb-3">
                 <label for="CourseName">Course:</label>
@@ -29,7 +29,7 @@
             <div class="mb-3">
                 <button type="submit" class="btn btn-primary">Add Grade</button>
                 <a class="btn btn-outline-primary" asp-controller="Grades" asp-action="Category"
-                   asp-route-categoryID="@Model.CategoryID">Cancel</a>
+                   asp-route-categoryID="@Model.CourseName">Cancel</a>
             </div>
         </form>
     </div>
